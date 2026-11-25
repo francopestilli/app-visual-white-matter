@@ -1,4 +1,15 @@
-# app-visual-white-matter
+<h1 align="center">visual white matter</h1>
+
+<p align="center">
+  Builds polar-angle-by-eccentricity visual cortex parcels from pRF maps and segments the tractogram streamlines that terminate in each parcel and visual area, using Connectome Workbench, FSL and MRtrix3.
+</p>
+
+<p align="center">
+  <a href="https://github.com/brainlife/abcd-spec"><img src="https://img.shields.io/badge/ABCD_Spec-v1.1-green.svg" alt="ABCD Spec v1.1"></a>
+  <a href="https://doi.org/10.25663/brainlife.app.785"><img src="https://img.shields.io/badge/Brainlife-brainlife.app.785-blue.svg" alt="Run on brainlife.io"></a>
+</p>
+
+## At a glance
 
 <!-- brainlife-app:begin (generated from the App manifest; edit the manifest, not this block) -->
 
@@ -8,13 +19,13 @@ Projects the pRF polar-angle and eccentricity maps from the FreeSurfer surface i
 
 | | |
 |---|---|
-| 📥 **Inputs** | `neuro/dwi` · `neuro/freesurfer` · `neuro/prf` · `neuro/track/tck` · `neuro/parcellation/volume` |
-| 📤 **Outputs** | `neuro/parcellation/volume` · `neuro/cortexmap` · `neuro/track/tck` · `neuro/tcks` · `neuro/wmc` · `neuro/tractmeasures` · `raw` |
-| ⚙️ **Resources** | 8 CPUs · 3 h walltime |
-| 🔑 **Requires** | `FREESURFER_LICENSE` |
-| 🔗 **Run it** | [doi.org/10.25663/brainlife.app.785](https://doi.org/10.25663/brainlife.app.785) |
+| **Inputs** | `neuro/dwi` · `neuro/freesurfer` · `neuro/prf` · `neuro/track/tck` · `neuro/parcellation/volume` |
+| **Outputs** | `neuro/parcellation/volume` · `neuro/cortexmap` · `neuro/track/tck` · `neuro/tcks` · `neuro/wmc` · `neuro/tractmeasures` · `raw` |
+| **Resources** | 8 CPUs · 3 h walltime |
+| **Requires** | `FREESURFER_LICENSE` |
+| **Run it** | [doi.org/10.25663/brainlife.app.785](https://doi.org/10.25663/brainlife.app.785) |
 
-#### 📥 Inputs
+#### Inputs
 
 | Input | Datatype | Required | Description |
 |---|---|---|---|
@@ -24,7 +35,7 @@ Projects the pRF polar-angle and eccentricity maps from the FreeSurfer surface i
 | `track` | `neuro/track/tck` | yes | Whole-brain .tck tractogram in DWI space. |
 | `varea` | `neuro/parcellation/volume` | yes | Volumetric visual-area parcellation with its label.json. |
 
-#### 📤 Outputs
+#### Outputs
 
 | Output | Datatype | Description |
 |---|---|---|
@@ -37,7 +48,7 @@ Projects the pRF polar-angle and eccentricity maps from the FreeSurfer surface i
 | `raw` | `raw` | Intermediate files (masks, MRtrix images, transforms and text outputs). |
 
 <details>
-<summary><b>⚙️ Parameters</b> (12)</summary>
+<summary><b>Parameters</b> (12)</summary>
 
 | Parameter | Type | Default | Description |
 |---|---|---|---|
@@ -58,5 +69,75 @@ Projects the pRF polar-angle and eccentricity maps from the FreeSurfer surface i
 
 <!-- brainlife-app:end -->
 
+## Versions on brainlife.io
+
+This repository hosts several Apps, each built from its own branch.
+
+| App | Branch | Run it | Status |
+|---|---|---|---|
+| Structural network connectomics of visual white matter by polar angle and eccentricity - Single Endpoints | [`v1.1`](https://github.com/bacaron/app-visual-white-matter/tree/v1.1) | [doi:10.25663/brainlife.app.785](https://doi.org/10.25663/brainlife.app.785) | current |
+| Structural network connectomics of visual white matter by polar angle and eccentricity - first version | [`v1.0`](https://github.com/bacaron/app-visual-white-matter/tree/v1.0) | [doi:10.25663/brainlife.app.780](https://doi.org/10.25663/brainlife.app.780) | deprecated |
+
+## Running the App
+
+### On brainlife.io
+
+Open the App at [doi.org/10.25663/brainlife.app.785](https://doi.org/10.25663/brainlife.app.785), choose `neuro/dwi`, `neuro/freesurfer`, `neuro/prf`, `neuro/track/tck`, `neuro/parcellation/volume` from your project, set the parameters and press **Execute**. The results are saved to your project as `neuro/parcellation/volume`, `neuro/cortexmap`, `neuro/track/tck`, `neuro/tcks`, `neuro/wmc`, `neuro/tractmeasures`, `raw`.
+
+### Locally
+
+You need [`jq`](https://jqlang.github.io/jq/), `FREESURFER_LICENSE`.
+
+1. Clone this repository and check out the App's branch (`git checkout v1.1`).
+2. Create `config.json` with the paths to your inputs and the parameters:
+
+   ```json
+   {
+       "dwi": "/path/to/dwi/dwi",
+       "bvecs": "/path/to/dwi/bvecs",
+       "bvals": "/path/to/dwi/bvals",
+       "sbref": "/path/to/dwi/sbref",
+       "sbref_json": "/path/to/dwi/sbref_json",
+       "freesurfer": "/path/to/freesurfer/freesurfer",
+       "prfVerticesDir": "/path/to/prf/prfVerticesDir",
+       "prfSurfacesDir": "/path/to/prf/prfSurfacesDir",
+       "track": "/path/to/track/track",
+       "varea_parc": "/path/to/varea/varea_parc",
+       "varea_label": "/path/to/varea/varea_label",
+       "paMeridians": "0 45 90 135 180",
+       "paAngle": "15",
+       "eccAngle": "2",
+       "inputparc": "aparc.a2009s",
+       "assignment_radial_search": 4,
+       "assignment_reverse_search": "",
+       "assignment_forward_search": "",
+       "inv_length": true,
+       "richClubPercentage": 90,
+       "analysis": "polarAngleMeridiansConnectomics",
+       "include_periph": true,
+       "endpoints_assignment": "single_endpoints"
+   }
+   ```
+
+3. Run `./main`.
+
 ## potential analyses
+
 1. polarAngleMeridiansConnectomics: this analysis pipeline will use structural connectivity within binned polar angle x eccentricity maps
+
+## Citing
+
+If you use this App, please cite it, the software it builds on and brainlife.io:
+
+- Structural network connectomics of visual white matter by polar angle and eccentricity - Single Endpoints. brainlife.io App. [doi:10.25663/brainlife.app.785](https://doi.org/10.25663/brainlife.app.785)
+- Fischl. FreeSurfer. *NeuroImage* 62:774-781 (2012). [doi:10.1016/j.neuroimage.2012.01.021](https://doi.org/10.1016/j.neuroimage.2012.01.021)
+- Jenkinson et al. FSL. *NeuroImage* 62:782-790 (2012). [doi:10.1016/j.neuroimage.2011.09.015](https://doi.org/10.1016/j.neuroimage.2011.09.015)
+- Tournier et al. MRtrix3: A fast, flexible and open software framework for medical image processing and visualisation. *NeuroImage* 202:116137 (2019). [doi:10.1016/j.neuroimage.2019.116137](https://doi.org/10.1016/j.neuroimage.2019.116137)
+- Garyfallidis et al. Dipy, a library for the analysis of diffusion MRI data. *Frontiers in Neuroinformatics* 8 (2014). [doi:10.3389/fninf.2014.00008](https://doi.org/10.3389/fninf.2014.00008)
+- Marcus et al. Informatics and Data Mining Tools and Strategies for the Human Connectome Project. *Frontiers in Neuroinformatics* 5 (2011). [doi:10.3389/fninf.2011.00004](https://doi.org/10.3389/fninf.2011.00004)
+- Hayashi S, Caron BA, Heinsfeld AS, et al. brainlife.io: a decentralized and open-source cloud platform to support neuroscience research. *Nature Methods* 21:809–813 (2024). [doi:10.1038/s41592-024-02237-2](https://doi.org/10.1038/s41592-024-02237-2)
+- Avesani P, McPherson B, Hayashi S, et al. The open diffusion data derivatives, brain data upcycling via integrated publishing of derivatives and reproducible open cloud services. *Scientific Data* 6:69 (2019). [doi:10.1038/s41597-019-0073-y](https://doi.org/10.1038/s41597-019-0073-y)
+
+## Authors
+
+Maintained by [@bacaron](https://github.com/bacaron).
